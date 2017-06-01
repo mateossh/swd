@@ -1,0 +1,24 @@
+#!/usr/bin/env bash
+# USAGE: swd <path_to_dir> <server_name>
+
+server_websites_dir="/srv"
+
+dir_path="$1"
+server_name="$2"
+dir_name=$(echo "$dir_path" | sed -E 's/(.*)\/(.*)/\2/')
+config_dir="/etc/apache2/sites-enabled"
+config="Alias /"$dir_name" "$server_websites_dir"/"$dir_name
+usage="Usage: swd <path_to_dir> <server_name>"
+
+if [ -z "$dir_path" ] || [ -z "$server_name" ]; then
+  echo $usage
+  false
+fi
+
+rsync -avz $dir_path $USER"@"$server_name:$server_websites_dir/ > /dev/null
+if [ ! -z "$dir_name" ]; then
+  ssh $server_name "echo '$config' > "$config_dir"/"$dir_name".conf; sudo /etc/init.d/apache2 reload"
+else
+  echo "Eror: something went wrong. Check parameters and try again!" | STDERR
+  false
+fi
