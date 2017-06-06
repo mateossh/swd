@@ -5,13 +5,15 @@ It allows you to quickly deploy simple static HTML pages to your server. For now
 
 **Server preparation:**
 1. Set the same account name either on server and pc.
-2. Set permissions to 777 on `sites-enabled` (temporary solution).
-3. Add
+2. Create group called `swd` and add your user to this group.
+3. Set `swd` as `sites-enabled`'s group-owner.
+4. Allow group to write files in `sites-enabled`.
+5. Add
 ```
-ALL ALL = (ALL) NOPASSWD: /etc/init.d/apache2 reload
-ALL ALL = (ALL) NOPASSWD: /bin/systemctl reload apache2.service
+%swd ALL = (ALL) NOPASSWD: /etc/init.d/apache2 reload
+%swd ALL = (ALL) NOPASSWD: /bin/systemctl reload apache2.service
 ```
-into `/etc/sudoers` file (tested on Ubuntu).
+into `/etc/sudoers` file (tested on Ubuntu). Following lines allow users from group `swd` to reload apache2 without entering password.
 
 **Proper installation:**
 1. Clone this repository.
