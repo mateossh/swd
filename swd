@@ -19,6 +19,6 @@ rsync -avz $dir_path $USER"@"$server_name:$server_websites_dir/ > /dev/null
 if [ ! -z "$dir_name" ]; then
   ssh $server_name "echo '$config' > "$config_dir"/"$dir_name".conf; sudo /etc/init.d/apache2 reload"
 else
-  echo "Eror: something went wrong. Check parameters and try again!" | STDERR
+  (>&2 echo "Eror: something went wrong. Check parameters and try again!")
   false
 fi
